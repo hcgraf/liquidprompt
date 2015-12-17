@@ -1,5 +1,10 @@
 
 1.10    201?-??-??
+	Breaking changes:
+	- In themes, LP_COLORMAP_x variables are replaced by a single
+	  LP_COLORMAP array variable. A warning will be displayed at startup
+	  if your config still uses the old variables, but a compatibility
+	  shim is active (will be removed in next release).
 	New features:
 	- Sudo:
 	    * The color of the prompt mark is now dynamic and changes to
@@ -35,6 +40,9 @@
 	    * The code using the 'sensors' command now uses the '-u' option
 	      ("raw output") that is easier to parse. This format is at least
 	      7 years old. (GitHub #379, #380)
+	    * We now try each backend (acpi/sensors) once to check it works
+	      at startup and disable the feature if none works.
+	      (GitHub #410, #319, #381, #387)
 	- CPU load indicator:
 	    * Fix the scale that was incorrectly 0-200 (GitHub #391)
 	- Title:
@@ -42,6 +50,7 @@
 	      escaping algorithm is rewritten and now just correct).
 	- Terminal channel:
 	    * Fix detection of tmux (GitHub #304, #377)
+            * Fix detection of local session on OS X (GitHub #407)
 	- Misc:
 	    * Fix bash 3 compatibility (GitHub #313)
 	    * Clear GREP_OPTIONS and skip 'grep' aliases (GitHub #372)
@@ -65,7 +74,10 @@
 	@hegedus, Anthony Gelibert (@anthonygelibert), Anthony Ramine (@nox),
 	Erik M Jacobs (@thoraxe), Pedro Parracho (@berserck), Brad Beyenhof
 	(@augmentedfourth), Austen Adler (@stonewareslord), Hagen Graf
-	(@hcgraf), William P. Riley-Land (@wprl)...
+	(@hcgraf), William P. Riley-Land (@wprl), Dave Rigby (@daverigby),
+	Ned Batchelder (@nedbat), Fabien Marty (@thefab), Alessio Garzi
+	(@Ozzyboshi), Roger Huang (@rhuang2014), Sebastian Bremicker
+	(@sebrem)...
 	... for their patches or bug reports.
 
 1.9     2014-11-12  dolmen (Olivier Mengué)
