@@ -5,6 +5,9 @@
 	  LP_COLORMAP array variable. A warning will be displayed at startup
 	  if your config still uses the old variables, but a compatibility
 	  shim is active (will be removed in next release).
+	- Many LP_ENABLE_* settings are now static (their effect applies when
+	  liquidprompt is loaded, and changing them at the prompt does nothing)
+	  to more and more improve speed.
 	New features:
 	- Sudo:
 	    * The color of the prompt mark is now dynamic and changes to
@@ -29,6 +32,11 @@
 	- Variables LP_SCREEN_TITLE_OPEN and LP_SCREEN_TITLE_CLOSE are now
           removed to simplify the code (GitHub #371)
 	Bug fixes:
+	- Improved zsh integration (but most issues had no impact of the
+	  user experience)
+	- Fix escaping of special chars from $PWD (well, almost, see GitHub
+	  #389) and explicitely set the shell options we need (instead of
+	  relying on the shell default settings)
 	- Git:
 	    * Fix typo in git work directory detection
 	- Fossil:
@@ -56,10 +64,17 @@
 	    * Clear GREP_OPTIONS and skip 'grep' aliases (GitHub #372)
 	- Shortened path:
 	    * Fix bugs when $PWD contains spaces or special chars (GitHub #369)
+	    * Optimize implementation in case of LP_PATH_KEEP=-1 : LP_PWD
+	      becomes static (related to GitHub #256, #336)
+	    * Optimize implementation in case LP_ENABLE_SHORTEN_PATH=0
+	    * Optimize implementation in case LP_ENABLE_SHORTEN_PATH=0 on bash
+	      with PROMPT_DIRTRIM
 	- Sample configuration files:
 	    * example.bashrc: major fixes
 	- The last statement of liquidprompt did not return 0 (GitHub #360,#361)
-	- Analog clock: fix the first hour after midnight on zsh (GitHub #365)
+	- Analog clock:
+	    * complete rewrite for speed and correctness (GitHub #365 and other
+	      issues)
 	- Documentation:
 	    * Many small fixes
 	- Move dist/ to contrib/dist/ as files there are unmaintained
@@ -77,7 +92,7 @@
 	(@hcgraf), William P. Riley-Land (@wprl), Dave Rigby (@daverigby),
 	Ned Batchelder (@nedbat), Fabien Marty (@thefab), Alessio Garzi
 	(@Ozzyboshi), Roger Huang (@rhuang2014), Sebastian Bremicker
-	(@sebrem)...
+	(@sebrem), Alex Prengere ()...
 	... for their patches or bug reports.
 
 1.9     2014-11-12  dolmen (Olivier Mengué)
