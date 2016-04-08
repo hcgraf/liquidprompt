@@ -86,7 +86,7 @@ if test -n "${BASH_VERSION-}" -a -n "$PS1" ; then
     # like $PWD, VCS branch names...
     _lp_escape()
     {
-        echo -nE "${1//\\/\\\\}"      #"}" # workaround vim syntax
+        echo -nE "${1//\\/\\\\}"
     }
 
     # Disable the DEBUG trap used by the RUNTIME feature
@@ -106,7 +106,7 @@ elif test -n "${ZSH_VERSION-}" ; then
     _LP_TIME_SYMBOL="%*"
     _LP_MARK_SYMBOL='%(!.#.%%)'
     _LP_PWD_SYMBOL="%~"
-    _LP_DIR_SYMBOL="%~1"
+    _LP_DIR_SYMBOL="%1~"
 
     _LP_FIRST_INDEX=1
     _LP_PERCENT='%%'
@@ -114,7 +114,7 @@ elif test -n "${ZSH_VERSION-}" ; then
 
     _lp_escape()
     {
-        arg="${1//\\/\\\\}"                  #"}" # workaround vim syntax
+        arg="${1//\\/\\\\}"
         echo -nE "${arg//\%/$_LP_PERCENT}"
     }
 
@@ -419,7 +419,7 @@ _lp_source_config()
     if [[ -f "$HOME/.liquidpromptrc" ]]; then
         source "$HOME/.liquidpromptrc"
     else
-        local configfile="${XDG_HOME_DIR:-$HOME/.config}/liquidpromptrc"
+        local configfile="${XDG_CONFIG_HOME:-$HOME/.config}/liquidpromptrc"
         [[ -f "$configfile" ]] && source "$configfile"
     fi
 
@@ -813,6 +813,7 @@ _lp_jobcount_color()
 _lp_are_vcs_enabled()
 {
     [[ -z "$LP_DISABLED_VCS_PATH" ]] && return 0
+    $_LP_SHELL_zsh && setopt local_options && setopt sh_word_split
     local path
     local IFS=:
     for path in $LP_DISABLED_VCS_PATH; do
@@ -842,6 +843,21 @@ _lp_git_branch()
     fi
 }
 
+
+# Display additional information if HEAD is in merging, rebasing
+# or cherry-picking state
+_lp_git_head_status() {
+    local gitdir
+    gitdir="$(\git rev-parse --git-dir 2>/dev/null)"
+    if [[ -f "${gitdir}/MERGE_HEAD" ]]; then
+        echo " MERGING"
+    elif [[ -d "${gitdir}/rebase-apply" || -d "${gitdir}/rebase-merge" ]]; then
+        echo " REBASING"
+    elif [[ -f "${gitdir}/CHERRY_PICK_HEAD" ]]; then
+        echo " CHERRY-PICKING"
+    fi
+}
+
 # Set a color depending on the branch state:
 # - green if the repository is up to date
 # - yellow if there is some commits not pushed
@@ -857,7 +873,8 @@ _lp_git_branch_color()
     if [[ -n "$branch" ]]; then
 
         local end
-        end="$NO_COL"
+        end="${LP_COLOR_CHANGES}$(_lp_git_head_status)${NO_COL}"
+
         if LC_ALL=C \git status --porcelain 2>/dev/null | \grep -Eq '^\?\?'; then
             end="$LP_COLOR_CHANGES$LP_MARK_UNTRACKED$end"
         fi
@@ -1090,7 +1107,7 @@ _lp_fossil_branch()
 {
     (( LP_ENABLE_FOSSIL )) || return
     local branch
-    branch=$(fossil status 2>/dev/null | sed -n $_LP_SED_EXTENDED 's/tags:[ ]*\(\w*\)$/\1/p')
+    branch=$(fossil status 2>/dev/null | sed -n -$_LP_SED_EXTENDED 's/^tags:\s+(\w*)$/\1/p')
     if [[ -n "$branch" ]]; then
         echo -nE "$branch"
     elif fossil info &>/dev/null ; then
@@ -1408,7 +1425,7 @@ if (( LP_ENABLE_RUNTIME )); then
             fi
 
             # If the command to run is the prompt, we'll have to ignore it
-            [[ "$BASH_COMMAND" = "$PROMPT_COMMAND" ]]
+            [[ "$BASH_COMMAND" != "$PROMPT_COMMAND" ]]
             _LP_RUNTIME_SKIP=$?
         }
 
