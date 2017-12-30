@@ -1,5 +1,29 @@
 
-1.10    201?-??-??
+NEXT
+	New features:
+	- Workaround broken .bashrc that export PROMPT_COMMAND (GH #450, #463):
+	  we now unexport it on startup
+	- Allow to customize the symbol before the path that shows if the
+	  directory is writable: LP_MARK_PERM (GitHub #430, #484)
+	Bug fixes:
+	- Fix regression in LP_ENABLE_FQDN implementation (GitHub #472)
+	- Fix LP_COLOR_HOST_HASH on SunOS (GitHub #461, #462)
+	- Fix LP_MARK_DEFAULT being ignored if root (GitHub #501)
+	- Git:
+	  * Faster "git stash" check (GitHub #503)
+	Thanks to Roman (@hatifnatt), Jon Garrison (@jpwgarrison),
+	Mark Vander Stel (@Rycieos), Bryce Jasmer (b-jazz), Felix
+	Schlitter (@felixSchl), Philip Garrison (@pgarrison), Lubomir
+	Host (@lhost), Iain Hallam (@iainhallam), Matt
+	Smith (@ncs-msmith)...
+	... for their patches or bug reports.
+
+1.11    2016-06-25
+	Bug fixes:
+	- OS X: sudo feature fixed
+	- OS X: battery level restored
+
+1.10    2016-05-30
 	Breaking changes:
 	- In themes, LP_COLORMAP_x variables are replaced by a single
 	  LP_COLORMAP array variable. A warning will be displayed at startup
@@ -11,14 +35,15 @@
 	- zsh: option 'nopromptsubst' is enabled for security reasons.
           This will unfortunately also affect evaluations of other prompt
 	  contexts such as RPS1.
+	- Variables LP_SCREEN_TITLE_OPEN and LP_SCREEN_TITLE_CLOSE are now
+          removed to simplify the code (GitHub #371)
 	New features:
 	- Sudo:
 	    * The color of the prompt mark is now dynamic and changes to
 	      LP_COLOR_MARK_SUDO (default: bold red) as long as your sudo
 	      credentials are cached (GitHub #335).
 	      Requires sudo 1.7.0+.
-	      This feature can be disabled with LP_ENABLE_SUDO=0 (as this is
-	      one more thing that slows the prompt).
+	      This feature must be enabled with LP_ENABLE_SUDO=1
 	      Use 'sudo -K' to revoke your credentials early.
 	    * This feature is disabled by default as there is no way to
 	      detect if the user has sudo rights without triggering a security
@@ -32,11 +57,9 @@
         - LP_HOSTNAME_ALWAYS=-1 to always hide the hostname (GitHub #406)
 	- Run duration of the last command (LP_ENABLE_RUNTIME) is now also
 	  supported on zsh (GitHub #404, #355)
-	Incompatible changes:
-	- Variables LP_SCREEN_TITLE_OPEN and LP_SCREEN_TITLE_CLOSE are now
-          removed to simplify the code (GitHub #371)
+	- Python: add support for Conda (CONDA_DEFAULT_ENV) (GitHub #425)
 	Bug fixes:
-	- Use $XDG_CONFIG_HOME to locate the config (GitHub #415, #420)
+	- Use $XDG_CONFIG_HOME to locate the config (GitHub #415, #420, #425)
 	- Improved zsh integration (but most issues had no impact of the
 	  user experience)
 	- Fix escaping of special chars from $PWD (well, almost, see GitHub
@@ -87,7 +110,7 @@
 	- Fix title escapes in zsh inside tmux/screen (GitHub #370, #371)
 
 	Thanks to Matt Fletcher (@MaffooBristol), Kevin Yap (@iKevinY), Sean
-	Hussey (@seanhussey), François Schmidts (@jaesisvsm), Morgan Knicely
+	Hussey (@seanhussey), François Schmidts (@jaesivsm), Morgan Knicely
 	(@morganizeit), Daniel Serodio (@dserodio), Jonathan Giddy
 	(@jongiddy), Jeremy Clement (@jeremyclement), Panayiotis Kkolos
 	(@pkkolos), Arturo Borrero Gonzalez (@aborrero), Samuel Krieg
@@ -98,9 +121,10 @@
 	(@hcgraf), William P. Riley-Land (@wprl), Dave Rigby (@daverigby),
 	Ned Batchelder (@nedbat), Fabien Marty (@thefab), Alessio Garzi
 	(@Ozzyboshi), Roger Huang (@rhuang2014), Sebastian Bremicker
-	(@sebrem), Alex Prengere (@alexprengere), Philipp Grogg (@grog-gg),
+	(@sebrem), Alex Prengere (@alexprengere), Philipp Grogg (@gro-gg),
 	Tener Hades (@tenerhades), Thomas Kühnel (@kuehnelth), Étienne Deparis
-	(@milouse), @Hotschke...
+	(@milouse), @Hotschke, Software Mechanic (@softwaremechanic), Simon
+	McVittie (@smcv)...
 	... for their patches or bug reports.
 
 1.9     2014-11-12  dolmen (Olivier Mengué)
